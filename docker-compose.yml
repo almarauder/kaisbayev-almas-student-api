@@ -1,0 +1,42 @@
+name: kaisbayev-almas-student-api
+
+services:
+  app:
+    build: .
+    image: kaisbayev-almas-student-api:${APP_VERSION:-v1.0-kaisbayev-almas}
+    container_name: kaisbayev-almas-app
+    ports:
+      - "${APP_PORT:-8081}:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - student-net
+
+  db:
+    image: postgres:15
+    container_name: kaisbayev-almas-db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - student-net
+
+volumes:
+  pgdata:
+
+networks:
+  student-net:
+    driver: bridge
