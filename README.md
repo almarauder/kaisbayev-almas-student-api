@@ -2,7 +2,7 @@
 
 Spring Boot CRUD application for managing students (PostgreSQL, Docker, Jenkins).
 
-Status: in progress
+Status: documented by Kaisbayev Almas (documentation branch)
 
 ## Change by Kaisbayev Almas
 Improved the CRUD operations: GET, PUT and DELETE for a nonexistent student now
